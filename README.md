@@ -78,3 +78,4 @@ Rooms: Create separate chatrooms for users to join.
 User Roles: Add different user roles, such as moderators, with varying levels of privileges.
 License
 This project is open-source and available for modification under the MIT License.
+.
