@@ -1,81 +1,75 @@
-TCP/IP Chatroom with Admin Privileges
-This project is a multi-client TCP/IP chatroom built in Python that allows clients to communicate in real time over a network. The server details are stored in a JSON file for easy configuration, and the chatroom supports admin privileges to manage connected users.
+# Secure TCP/IP Chatroom with File Transfer
 
-Features
-Multi-client support: Multiple clients can connect and chat simultaneously using a threaded server.
-Admin privileges: An admin can kick users out of the chatroom by issuing special commands.
-Server configuration in JSON: Server details like IP address and port are stored in a server_config.json file for easy configuration.
-Broadcast messages: Messages are sent to all connected users except the sender.
-Threaded server: Ensures smooth handling of multiple users by using threads to manage each connection.
-Project Structure
-plaintext
-Copy code
+This project is a **Secure, Multi-client TCP/IP Chatroom** built in Python. It has been upgraded from a basic text chat to a feature-rich, encrypted communication system.
+
+## Key Features
+- **🔒 Secure Encrypted Chat**: All messages are encrypted using SSL/TLS (self-signed certificates), ensuring privacy from network snooping.
+- **🕵️ Anonymous Mode**: Join without a nickname to be assigned a random identity (e.g., `Anon#1234`). No password required.
+- **📁 File Transfer**: Broadcast files to all connected users using the `/send` command.
+- **⚡ JSON Protocol**: Uses a robust JSON-based protocol for reliable data and file exchange.
+- **🛡️ Admin Privileges**: Admins can kick/ban users (requires password login).
+
+## Project Structure
+```plaintext
 .
-├── server.py                # The server-side script
-├── client.py                # The client-side script
-├── server_config.json        # JSON file containing server configuration
-└── README.md                # Project documentation
-Prerequisites
-Python 3.x
-A terminal or command line interface
-Setup Instructions
-1. Clone the repository
-bash
-git clone <repository_url>
-cd <repository_directory>
-2. Install dependencies (if any)
-This project uses Python's built-in libraries (socket, threading, json), so no additional dependencies are required.
+├── Chat-On/
+│   ├── server.py           # Secure Server script
+│   ├── client.py           # Secure Client script
+│   ├── generate_cert.py    # Script to generate SSL keys
+│   ├── server.crt          # SSL Certificate (generated)
+│   ├── server.key          # SSL Private Key (generated)
+│   ├── servers.json        # Server configuration
+│   └── downloads/          # Received files are saved here
+└── README.md               # Documentation
+```
 
-3. Configure the Server
-Edit the server_config.json file to specify your server details:
+## Prerequisites
+- Python 3.x
+- `cryptography` library
 
-json
-{
-    "server_ip": "127.0.0.1",
-    "server_port": 5555,
-    "admin_password": "admin123"
-}
-4. Start the Server
-Run the following command to start the server:
+## Setup Instructions
 
-bash
+### 1. Install Dependencies
+```bash
+pip install cryptography
+```
+
+### 2. Generate SSL Certificates
+Before running the server, you must generate the self-signed certificates:
+```bash
+cd Chat-On
+python generate_cert.py
+```
+*This will create `server.crt` and `server.key`.*
+
+## Usage
+
+### 1. Start the Server
+```bash
 python server.py
-The server will start listening for connections on the specified IP address and port.
+```
+You will see: `Secure Server Listening...`
 
-5. Start a Client
-In another terminal window, run the client script to connect to the server:
-
-bash
+### 2. Start a Client
+Open a new terminal (or multiple) and run:
+```bash
 python client.py
-Once connected, you can start chatting!
+```
 
-6. Admin Commands
-If you're an admin, you can use special commands to manage users. For example:
+### 3. Login Options
+- **Anonymous**: Leave the Nickname field **BLANK** and press Enter. You will be `Anon#XXXX`.
+- **Admin**: Enter nickname `admin`. You will be prompted for the password (`adminpass` by default).
+- **Regular User**: Enter any other unique nickname.
 
-Kick a user: Kick a specific user from the chatroom by their IP and port.
-php
-/admin kick <ip> <port>
-You can extend admin functionality to include other features such as banning or muting users.
+### 4. Commands
+- **Send File**: `/send <path_to_file>`
+  - Example: `/send C:\Images\my_photo.jpg`
+  - The file will be sent to all other users and saved in their `downloads/` folder.
+  
+- **Admin Only**:
+  - `/kick <nickname>`: Kick a user.
+  - `/ban <nickname>`: Ban a user (prevents rejoin).
 
-Example Usage
-Start the server:
-
-bash
-python server.py
-Connect clients:
-bash
-python client.py
-Chat freely between clients.
-
-If you're the admin, issue commands like:
-
-bash
-/admin kick 127.0.0.1 5555
-Future Enhancements
-Authentication for Admins: Add a login system to authenticate admins before granting privileges.
-Private Messaging: Implement private messaging between users.
-Rooms: Create separate chatrooms for users to join.
-User Roles: Add different user roles, such as moderators, with varying levels of privileges.
-License
-This project is open-source and available for modification under the MIT License
+## License
+This project is open-source and available for modification under the MIT License.
 
